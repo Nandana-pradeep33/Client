@@ -1,10 +1,23 @@
-import React from 'react'
-import { Link } from 'react-router-dom';
 
-import loginImg from '../assets/login.jpg'
+import axios from 'axios';
+import { Link, useNavigate } from 'react-router-dom';
 import students from '../assets/students.png'
-
+import React, { useState } from 'react'
 export default function Login() {
+  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const navigate = useNavigate();
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    axios.post('http://localhost:3001/login', {  email, password })
+    .then(result => {
+        console.log(result);
+        if(result.data == "Success"){
+        // Navigate to the next page on successful registration
+        navigate('/Main');}
+    })
+    .catch(err=> console.log(err));
+};
   return (
     <div className='grid grid-cols-1 sm:grid-cols-2 h-screen w-full'>
     <div className='hidden sm:block' style={{ position: 'relative' }}>
@@ -40,23 +53,26 @@ style={{
 
 
         <div className='bg-gray-800 flex flex-col justify-center'>
-        <form className='max-w-[500px] w-full mx-auto rounded-lg bg-gray-900 p-8 py-12 px-8 transform transition-transform duration-300 hover:scale-105 '>
+        <form onSubmit={handleSubmit}  className='max-w-[500px] w-full mx-auto rounded-lg bg-gray-900 p-8 py-12 px-8 transform transition-transform duration-300 hover:scale-105 '>
         <h2 className='text-3xl text-white font-bold text-center'>Sign In</h2>
         <div className='flex flex-col text-gray-400 py-2'>
-            <label>Username</label>
-            <input className='rounded-lg bg-gray-700 mt-2 p-2 focus:border-blue-500 focus:bg-gray-800 focus:outline-none' type="text" />
+            <label>Email</label>
+            
+            <input className='rounded-lg bg-gray-700 mt-2 p-2 focus:border-blue-500 focus:bg-gray-800 focus:outline-none' type="email" 
+              onChange={(e) => setEmail(e.target.value)}/>
         </div>
         <div className='flex flex-col text-gray-400 py-2'>
             <label>Password</label>
-            <input className='p-2 rounded-lg bg-gray-700 mt-2 focus:border-blue-500 focus:bg-gray-800 focus:outline-none' type="password" />
+            <input className='p-2 rounded-lg bg-gray-700 mt-2 focus:border-blue-500 focus:bg-gray-800 focus:outline-none' type="password" onChange={(e) => setPassword(e.target.value)}/>
+           
         </div>
         <div className='flex justify-between text-gray-400 py-2'>
             <p className='flex items-center'><input className='mr-2' type="checkbox" /> Remember Me</p>
             <p>Forgot Password</p>
         </div>
-        <Link to='/Main'>
+        
   <button type="submit" className='w-full my-5 py-2 bg-teal-500 shadow-lg shadow-teal-500/50 hover:shadow-teal-500/40 text-white font-semibold rounded-lg'>Sign In</button>
-</Link>
+
         
         <p className='pt-4 text-center text-gray-400 mx-auto'>Don't have an account? <Link to='/Signup'><u>Sign Up</u></Link></p>
     </form>
