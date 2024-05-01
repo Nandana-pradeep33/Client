@@ -2,10 +2,11 @@
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import students from '../assets/students.png'
-import React, { useState } from 'react'
+import React, { useState , useEffect  } from 'react'
 export default function Login() {
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -13,11 +14,17 @@ export default function Login() {
     .then(result => {
         console.log(result);
         if(result.data == "Success"){
+          setIsAuthenticated(true);
+          localStorage.setItem('isAuthenticated', 'true');
         // Navigate to the next page on successful registration
         navigate('/Main');}
     })
     .catch(err=> console.log(err));
 };
+useEffect(() => {
+  console.log('Is authenticated:', isAuthenticated);
+}, [isAuthenticated]);
+
   return (
     <div className='grid grid-cols-1 sm:grid-cols-2 h-screen w-full'>
     <div className='hidden sm:block' style={{ position: 'relative' }}>

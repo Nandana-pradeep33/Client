@@ -8,17 +8,86 @@ const SignUp = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [contact, setContact] = useState('');
+    const [contactError, setContactError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+    const [confirmPasswordError, setConfirmPasswordError] = useState('');
+    const [emailError, setEmailError] = useState('');
+    
     const navigate = useNavigate();
-    const handleSubmit = (e) => {
+    const checkIfEmailExists = async (email) => {
+        try {
+          const response = await fetch(`/api/check-email?email=${email}`);
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          const data = await response.json();
+          return data.exists;
+        } catch (error) {
+          console.error('Error:', error);
+          // Handle the error here, e.g., display a message to the user
+          return false; // Return false indicating that the email check failed
+        }
+      };
+      const handleSubmit = async (e) => {
         e.preventDefault();
+        const contactRegex = /^\d{10,}$/;
+        const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+{};:,<.>]).{8,}$/;
+        if (!strongPasswordRegex.test(password)) {
+            setPasswordError('Password must be strong (A minimum 8 characters password contains a combination of uppercase and lowercase letter, number & special character are required)');
+        }
+        else if (password !== confirmPassword) {
+            setConfirmPasswordError('Passwords do not match');
+        }
+        else if (!contactRegex.test(contact)) {
+            setContactError('Contact number must be at least 10 digits long and contain only numbers');
+        }
+        else {
+            try {
+                const emailExists = await checkIfEmailExists(email);
+                if (emailExists) {
+                    setEmailError('Email address is already registered');
+                } else {
+                    const result = await axios.post('http://localhost:3001/register', { name, email, password, contact });
+                    console.log(result);
+                    // Navigate to the next page on successful registration
+                   
+                   
+                    navigate('/Profile');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                if (error.response && error.response.status === 400) {
+                    setEmailError('Email address is already registered');
+                } else {
+                    setEmailError('An error occurred during registration');
+                }
+            }
+        }
+    };
+    
+    const handleSubmit1 = async (e) => {
+        e.preventDefault();
+        const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+{};:,<.>]).{8,}$/;
+        if (!strongPasswordRegex.test(password)) {
+            setPasswordError('Password must be strong (A minimum 8 characters password contains a combination of uppercase and lowercase letter, number & special character are required)');
+          }
+          else if (password !== confirmPassword) {
+            setConfirmPasswordError('Passwords do not match');
+          }
+          else {
+            const emailExists = await checkIfEmailExists(email);
+          if (emailExists) {
+        setEmailError('Email address is already registered');
+      } else{
         axios.post('http://localhost:3001/register', { name, email, password, contact })
         .then(result => {
             console.log(result);
             // Navigate to the next page on successful registration
             navigate('/Profile');
         })
-        .catch(err=> console.log(err));
+        .catch(err=> console.log(err));}}
     };
     
   return (
@@ -63,28 +132,39 @@ const SignUp = () => {
                 <div className='flex flex-col text-gray-400 py-2'>
                     <label >Full Name:</label>
                     <input className='border bg-gray-700 border-black rounded-lg  mt-2 p-2 focus:border-blue-500  ' type="text"
-                    onChange={(e) => setName(e.target.value)} />
+                    onChange={(e) => setName(e.target.value)} 
+                    required/>
                 </div>
                 <div className='flex flex-col text-gray-400 py-2'>
                     <label>Email ID:</label>
                     <input className='border bg-gray-700 border-black rounded-lg  mt-2 p-2 focus:border-blue-500' type="email" 
                     onChange={(e) => setEmail(e.target.value)}
-                    />
+                    required
+                   />
+                    {emailError && <p className="text-red-500">{emailError}</p>}
                 </div>
                 <div className='flex flex-col text-gray-400 py-2'>
                     <label >Contact Number:</label>
                     <input className='border  bg-gray-700 border-black rounded-lg  mt-2 p-2 focus:border-blue-500' type="text"
-                    onChange={(e) => setContact(e.target.value)} />
+                    onChange={(e) => setContact(e.target.value)} 
+                    required/>
+                     {contactError && <span className="text-red-500">{contactError}</span>}
                 </div>
                 <div className='flex flex-col text-gray-400 py-2'>
                     <label>Password:</label>
                     <input className='border bg-gray-700 border-black rounded-lg  mt-2 p-2 focus:border-blue-500' type="password" 
                     onChange={(e) => setPassword(e.target.value)}
-                    />
+                     required/>
+                     {passwordError && <p className="text-red-500">{passwordError}</p>}
                 </div>
+                
                 <div className='flex flex-col text-gray-400 py-2'>
                     <label >Confirm Password:</label>
-                    <input className='border bg-gray-700 border-black rounded-lg  mt-2 p-2 focus:border-blue-500' type="password" />
+                    <input className='border bg-gray-700 border-black rounded-lg  mt-2 p-2 focus:border-blue-500' type="password" 
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                    />
+                    {confirmPasswordError && <p className="text-red-500">{confirmPasswordError}</p>}
                 </div>
                
                

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import  scribeBackgroundImage from '../assets/support_students.png';
 //import bookBackgroundImage from './schl1.jpg';
@@ -7,7 +7,10 @@ import  scribeBackgroundImage from '../assets/support_students.png';
 
 const Scribe = () => {
   const [dates, setDates] = useState(['']);
-
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    localStorage.getItem('isAuthenticated') === 'true'
+  );
+  
   const [showBottomBoxLeft, setShowBottomBoxLeft] = useState(true);
   const [showBottomBoxRight, setShowBottomBoxRight] = useState(false);
   
@@ -48,7 +51,9 @@ const Scribe = () => {
     setShowBottomBoxRight(false); // Hide the bottom box Right
   };
 
-
+  useEffect(() => {
+    console.log('Is authenticated:', isAuthenticated);
+  }, [isAuthenticated]);
   return (
     
     <div className='mainbox w-screen h-screen ' >
