@@ -1,4 +1,8 @@
 import  { useState } from "react";
+import { useUser } from './UserContext';
+import { Outlet } from 'react-router-dom';
+
+
 import ResponsiveAppBar from './ResponsiveAppBar';
 import { Link } from 'react-router-dom';
 import students from '../assets/st2.png';
@@ -106,8 +110,10 @@ const Landingpage = () => {
     autoplay: true,
     autoplaySpeed: 2000, // Change the speed here (in milliseconds)
   };
+  const { user } = useUser();
   return (
     <div>
+       <Outlet userData={user} />
       <ResponsiveAppBar />
       <div className="px-4 py-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-5">
         <div className="flex flex-col items-center justify-between w-full  lg:flex-row">

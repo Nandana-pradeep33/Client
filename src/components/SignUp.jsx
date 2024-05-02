@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react'
 import  loginImg from '../assets/students.png'
 import { Link, useNavigate } from 'react-router-dom';
@@ -52,9 +53,9 @@ const SignUp = () => {
                     const result = await axios.post('http://localhost:3001/register', { name, email, password, contact });
                     console.log(result);
                     // Navigate to the next page on successful registration
+                    const userData = { name, email, contact };
                    
-                   
-                    navigate('/Profile');
+                    navigate('/profile', { state: userData });
                 }
             } catch (error) {
                 console.error('Error:', error);

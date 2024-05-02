@@ -17,6 +17,8 @@ import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import SearchIcon from '@mui/icons-material/Search';
 import { useNavigate } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
@@ -68,13 +70,21 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 const pages = ['', '', ''];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const settings = ['Profile',  'Logout'];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();  // Use useHistory hook
+
+
+  const handleCloseUserMenu = () => {
+    
+      setAnchorElUser(null);
+      // Handle other menu options
+   
+  };
 
   const handleLogout = () => {
     // Clear authentication state (example)
@@ -86,6 +96,12 @@ localStorage.removeItem('isAuthenticated');
     console.log('Is authenticated:', isAuthenticated);
 
     navigate('/'); 
+};
+const handleProfile= () => {
+   // Clear authentication state (example)
+  // Update state to indicate user is not authenticat
+  console.log("Navigating to profile page")
+  navigate('/Main/Profile2'); 
 };
 
   const handleOpenNavMenu = (event) => {
@@ -99,9 +115,7 @@ localStorage.removeItem('isAuthenticated');
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
+ 
 
   return (
     <AppBar position="static" sx={{ backgroundColor: '#2d3748' }}>
@@ -223,9 +237,10 @@ localStorage.removeItem('isAuthenticated');
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={setting === 'Logout' ? handleLogout : handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
+               <MenuItem key={setting} onClick={setting === 'Logout' ? handleLogout : setting === 'Profile' ? handleProfile : handleCloseUserMenu}>
+  <Typography textAlign="center">{setting}</Typography>
+</MenuItem>
+              
               ))}
             </Menu>
           </Box>
