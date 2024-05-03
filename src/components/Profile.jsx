@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
-
-import React, { useState } from 'react'
+import axios from 'axios';
+import React, { useState, useEffect } from 'react'
 
 import profile from '../assets/profile.jpeg';
 import Checkbox from '@mui/material/Checkbox';
@@ -9,15 +9,45 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
-
+import {  useNavigate } from 'react-router-dom';
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 function App() {
   const [year , setYear] = useState('');
   const [branch, setBranch] = useState('');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [selectedSkills, setSelectedSkills] = useState([]);
   const location = useLocation();
   const userData = location.state;
+
+  useEffect(() => {
+    setName(userData.name);
+    setEmail(userData.email);
+  }, [userData]);
+  const navigate = useNavigate();
+
+  const handleSkillChange = (event, selectedOptions) => {
+    setSelectedSkills(selectedOptions.map((option) => option.title));
+  };
+  
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      
+      const response = await axios.put('http://localhost:3001/updateUser', { email: userData.email, year, branch,skills: selectedSkills });
+      console.log(response.data);
+      navigate('/')
+      // Handle success, e.g., show a success message
+    } catch (error) {
+      console.error(error);
+      // Handle error, e.g., show an error message
+    }
+  };
+  
+
+  
 
   return (
     <div className="flex flex-col h-screen">
@@ -25,7 +55,9 @@ function App() {
         <div className="w-1/2  bg-white-200 flex flex-col justify-center items-center pt-8">
           <img className='h-28 w-28 rounded-full mb-4 ml-5' src={profile} alt=""  style={{marginLeft:"6rem"}}/>
           <div className="flex flex-col items-center">
-            <p className="font-bold mb-2" style={{marginLeft:"6rem"}}>{userData.name}</p>
+            <p className="font-bold mb-2" style={{marginLeft:"6rem"}}>{userData.name}
+            
+            </p>
             <div className="mb-4">
               <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"style={{marginLeft:"6rem"}}>
                 Follow
@@ -52,13 +84,13 @@ function App() {
             
             <label className='font-bold'>Class:</label>
             <input type='text' className='border border-black pl-2'
-            onChange={(e) => setYear(e.target.value)} ></input>
+            onChange={(e) => setYear(e.target.value)}/>
             <hr className="mt-1 mb-1 w-full" />
           </div>
           <div className="mb-1">
           <label className='font-bold'>Branch:</label>
             <input type='text' className='border border-black pl-2'
-            onChange={(e) => setBranch(e.target.value)}></input>
+            onChange={(e) => setBranch(e.target.value)}/>
             <hr className="mt-1 mb-1 w-full" />
           </div>
           </form>
@@ -69,44 +101,36 @@ function App() {
 
 
       <Autocomplete
-          multiple
-          id="checkboxes-tags-demo"
-          options={skillOptions}
-          disableCloseOnSelect
-          getOptionLabel={(option) => option.title}
-          renderOption={(props, option, { selected }) => (
-            <li {...props}>
-              <Checkbox
-                icon={icon}
-                checkedIcon={checkedIcon}
-                style={{ marginRight: 8 }}
-                checked={selected}
-              />
-              {option.title}
-            </li>
-          )}
-          style={{ width: '50%' }}
-          renderInput={(params) => (
-            <TextField {...params} label="Add Skill" placeholder="Favorites" />
-          )}
-        />
+  multiple
+  id="checkboxes-tags-demo"
+  options={skillOptions}
+  disableCloseOnSelect
+  getOptionLabel={(option) => (option ? option.title : '')}
+  onChange={handleSkillChange}
+  value={selectedSkills.map((skill) => skillOptions.find((option) => option.title === skill))}
+  renderOption={(props, option, { selected }) => (
+    <li {...props}>
+      <Checkbox
+        icon={icon}
+        checkedIcon={checkedIcon}
+        style={{ marginRight: 8 }}
+        checked={selected}
+      />
+      {option.title}
+    </li>
+  )}
+  style={{ width: '50%' }}
+  renderInput={(params) => (
+    <TextField {...params} label="Add Skill" placeholder="Favorites" />
+  )}
+/>
         <div className="mt-4">
-        <Link
-  to={{
-    pathname: '/',
-    state: {
-      name: userData.name,
-      email: userData.email,
-      contact: userData.contact,
-      branch: branch,
-      year: year,
-    },
-  }}
->
-  <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 mt-3 px-4 rounded">
+ 
+
+  <button  onClick={handleSubmit} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 mt-3 px-4 rounded">
     Submit
   </button>
-</Link>
+
           </div>
       </div>
     </div>
@@ -117,7 +141,7 @@ function App() {
     { title: 'Dance' },
     { title: 'Music' },
     { title: 'Web Development' },
-    { title: 'AI' },
+    { title: 'Artificial Intelligance' },
     { title: 'Flutter' },
     { title: 'Academics' },
     { title: 'Act as Scribe' }

@@ -1,10 +1,12 @@
 import  { useState } from "react";
 import { useUser } from './UserContext';
 import { Outlet } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 
 import ResponsiveAppBar from './ResponsiveAppBar';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import students from '../assets/st2.png';
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
@@ -101,6 +103,20 @@ const Item = styled(Paper)(({ theme }) => ({
   };
   
 const Landingpage = () => {
+ 
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const email = searchParams.get('email');
+ 
+
+  const handleCardClick = (title) => {
+    // Navigate to the desired page when a card is clicked
+    navigate(`/Main/SkillList/${encodeURIComponent(title)}`);
+  };
+
+
   const settings = {
     dots: true,
     infinite: true,
@@ -110,11 +126,12 @@ const Landingpage = () => {
     autoplay: true,
     autoplaySpeed: 2000, // Change the speed here (in milliseconds)
   };
-  const { user } = useUser();
+  
+  
   return (
     <div>
-       <Outlet userData={user} />
-      <ResponsiveAppBar />
+      
+      <ResponsiveAppBar email={email}  />
       <div className="px-4 py-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-5">
         <div className="flex flex-col items-center justify-between w-full  lg:flex-row">
           <div className=" lg:mb-0 lg:max-w-lg lg:pr-5">
@@ -169,37 +186,38 @@ const Landingpage = () => {
         <div className='align-items-center'>
         <h2 className='text-white text-center font-bold text-4xl pb-5 mb-20 ' style={{fontSize:'45px'}}>Explore Your Choice</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 place-items-center p-6 pr-16 mr-5 gap-1 ">
-        {CardsData.map(({ id, img, title, desc }) => {
-          return (
-            <div
-              key={id}
-              className="text-white shadow-md rounded-lg overflow-hidden relative group mb-9 "
-            >
-              <img
-                src={img}
-                alt=""
-                className="w-full max-w-[300px] h-[270px] rounded-lg "
-              />
-              {/* overlay section */}
-              <div className="absolute left-0 top-[-100%] opacity-0 group-hover:opacity-100 group-hover:top-[0] p-4 w-full h-full bg-black/60 group-hover:backdrop-blur-sm duration-500">
-                <div className="space-y-4">
-                  <Slide cascade>
-                    <h1 className="text-3xl font-bold">{title}</h1>
-                    <Fade cascade damping={0.05}>
-                      {desc}
-                    </Fade>
-                    <div>
-                      <button className="border border-white px-4 py-2 rounded-lg hover:bg-black/20 duration-300">
-                        View
-                      </button>
-                    </div>
-                  </Slide>
-                </div>
+      {CardsData.map(({ id, img, title, desc }) => {
+        return (
+          <div
+            key={id}
+            className="text-white shadow-md rounded-lg overflow-hidden relative group mb-9"
+            onClick={() => handleCardClick(title)} // Call handleCardClick on click
+          >
+            <img
+              src={img}
+              alt=""
+              className="w-full max-w-[300px] h-[270px] rounded-lg"
+            />
+            {/* overlay section */}
+            <div className="absolute left-0 top-[-100%] opacity-0 group-hover:opacity-100 group-hover:top-[0] p-4 w-full h-full bg-black/60 group-hover:backdrop-blur-sm duration-500">
+              <div className="space-y-4">
+                <Slide cascade>
+                  <h1 className="text-3xl font-bold">{title}</h1>
+                  <Fade cascade damping={0.05}>
+                    {desc}
+                  </Fade>
+                  <div>
+                    <button className="border border-white px-4 py-2 rounded-lg hover:bg-black/20 duration-300">
+                      View
+                    </button>
+                  </div>
+                </Slide>
               </div>
             </div>
-          );
-        })}
-      </div>
+          </div>
+        );
+      })}
+    </div>
       </div>
       </div>
       <section className="relative z-20 overflow-hidden bg-white pb-12 pt-20 dark:bg-dark lg:pb-[90px] lg:pt-[120px]">
@@ -282,10 +300,18 @@ const Landingpage = () => {
       </div>
     </section>
     <footer className="bg-gray-800 text-white py-4 text-center">
-      <div className="container mx-auto">
-        <p>&copy; 2024 ClassMate. All rights reserved.</p>
-      </div>
-    </footer>
+  <div className="container mx-auto">
+    <p>&copy; 2024 ClassMate. All rights reserved.</p>
+    <p className="mt-4 mb-2">ClassMate is a platform for students to share and acquire skills. Whether you're looking for a scribe, want to offer your skills, or simply connect with like-minded individuals, ClassMate has you covered. Join our community today!</p>
+    <ul className="mt-4">
+      <li><a href="#">About Us</a></li>
+      <li><a href="#">Contact Us</a></li>
+      <li><a href="#">Terms of Service</a></li>
+      <li><a href="#">Privacy Policy</a></li>
+    </ul>
+  </div>
+</footer>
+
     </div>
   );
 };

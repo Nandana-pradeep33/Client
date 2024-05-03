@@ -1,4 +1,5 @@
 import { useLocation } from 'react-router-dom';
+
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import students from '../assets/students.png'
@@ -17,18 +18,19 @@ export default function Login() {
 
 
   const navigate = useNavigate();
-
+  
   const handleSubmit = (e) => {
+    
     e.preventDefault();
     axios.post('http://localhost:3001/login', {  email, password })
     .then(result => {
         console.log(result);
         if (result.data === "Success") {
           setIsAuthenticated(true);
-          setUser({ name: 'John Doe', email: 'johndoe@example.com', contact: '123-456-7890' });
+          navigate(`/main?email=${email}`);
           localStorage.setItem('isAuthenticated', 'true');
           // Navigate to the next page on successful registration
-          navigate('/Main');
+         
       } else if (result.data === "the password is incorrect") {
           setErrorMessage('Incorrect password');
       } else if (result.data === "no record existed") {

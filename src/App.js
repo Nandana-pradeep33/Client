@@ -10,6 +10,7 @@ import React, { useState } from 'react'
 import { UserProvider } from './components/UserContext'
 import { Redirect } from 'react-router-dom'; 
 import Profile2 from './components/Profile2';
+import SkillList from './components/SkillList';
 
 
 const App = () => {
@@ -32,7 +33,7 @@ const [isAuthenticated, setIsAuthenticated] = useState(
       <Route path='/Main' element={<Landingpage/>} exact/>
       <Route path='/Profile' element={<Profile/>} exact/>
       <Route path='/Main/Profile2' element={<Profile2/>} exact/>
-      
+      <Route path='/Main/SkillList/:title' element={<SkillList/>} exact/>
       <Route path="/Scribe" element={<Scribe/> }/>
         
     </Routes>

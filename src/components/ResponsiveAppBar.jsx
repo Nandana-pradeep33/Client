@@ -69,10 +69,11 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     
   },
 }));
+
 const pages = ['', '', ''];
 const settings = ['Profile',  'Logout'];
 
-function ResponsiveAppBar() {
+function ResponsiveAppBar({email}) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -101,7 +102,7 @@ const handleProfile= () => {
    // Clear authentication state (example)
   // Update state to indicate user is not authenticat
   console.log("Navigating to profile page")
-  navigate('/Main/Profile2'); 
+  navigate(`/Main/profile2?email=${email}`); 
 };
 
   const handleOpenNavMenu = (event) => {
