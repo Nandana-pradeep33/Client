@@ -2,4 +2,4 @@ This is a Peer-to-Peer Skill Connect Platform for college students.
 
 
 
-![Alt text](src/assets/dance.jpeg)
+![Alt text](src/assets/dance.jpg)
