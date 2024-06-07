@@ -20,7 +20,7 @@ This Peer-to-Peer Skill Connect Platform for college students helps them connect
 
 ![Alt text](src/assets/landing.png)
 
-![Alt text](src/assets/landing2.png)
+![Alt text](src/assets/landing21.png)
 
 ![Alt text](src/assets/faq.png)
 
