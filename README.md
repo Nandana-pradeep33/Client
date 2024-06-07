@@ -29,15 +29,16 @@ This Peer-to-Peer Skill Connect Platform for college students helps them connect
 ![Alt text](src/assets/search.png)
 
 
-## Scribe request
+## Scribe Request
 
+![Alt text](src/assets/scribea.png)
 
-![Alt text](src/assets/scribeg.png)
 
 
 ## Scribe Accept
 
-![Alt text](src/assets/scribea.png)
+![Alt text](src/assets/scribeg.png)
+
 
 
 
