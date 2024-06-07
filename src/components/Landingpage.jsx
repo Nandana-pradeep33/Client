@@ -3,8 +3,9 @@ import { useUser } from './UserContext';
 import { Outlet } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { FaTwitter, FaFacebookSquare, FaDribbble, FaGithub, FaWhatsapp } from 'react-icons/fa';
 
-
+import BackToTopButton from './BackToTopButton';
 import ResponsiveAppBar from './ResponsiveAppBar';
 import { Link, useParams } from 'react-router-dom';
 import students from '../assets/st2.png';
@@ -110,10 +111,21 @@ const Landingpage = () => {
   const searchParams = new URLSearchParams(location.search);
   const email = searchParams.get('email');
  
+  const handleScribe= () => {                                      //
+    console.log("navigating to scribe page")
+    navigate(`/Main/Scribe?email=${email}`);
+  } 
+
+
+
 
   const handleCardClick = (title) => {
     // Navigate to the desired page when a card is clicked
     navigate(`/Main/SkillList/${encodeURIComponent(title)}`);
+  };
+
+  const handleWhatsappClick = () => {
+    window.open('https://api.whatsapp.com/send?phone=8138064717', '_blank');
   };
 
 
@@ -132,7 +144,9 @@ const Landingpage = () => {
     <div>
       
       <ResponsiveAppBar email={email}  />
+      <BackToTopButton/>
       <div className="px-4 py-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-5">
+        
         <div className="flex flex-col items-center justify-between w-full  lg:flex-row">
           <div className=" lg:mb-0 lg:max-w-lg lg:pr-5">
           <Slider {...settings}>
@@ -159,11 +173,11 @@ const Landingpage = () => {
                 <span className="inline-block text-deep-purple-accent-400">as One !</span>
               </h2>
               <p  className="text-gray-700 text-base md:text-lg">Search for scribe or be a helping hand to someone. Click the button below to know more.</p>
-              <Link to="/Scribe">
-  <button className="mt-3 border border-black rounded-full py-2 px-4 text-black hover:bg-blue-900 hover:text-white transition-colors duration-300">
+             
+  <button className="mt-3 border border-black rounded-full py-2 px-4 text-black hover:bg-blue-900 hover:text-white transition-colors duration-300"  onClick={handleScribe}>
     Explore More
   </button>
-</Link>
+
 
             </div>
             </Slider>
@@ -232,7 +246,7 @@ const Landingpage = () => {
                 Any Questions? Look Here
               </h2>
               <p className="text-base text-body-color dark:text-dark-6">
-                There are various FAQ which would be useful to you. Tke a look into it.
+                There are various FAQ which would be useful to you. Take a look into it.
               </p>
             </div>
           </div>
@@ -299,18 +313,80 @@ const Landingpage = () => {
         </svg>
       </div>
     </section>
-    <footer className="bg-gray-800 text-white py-4 text-center">
-  <div className="container mx-auto">
-    <p>&copy; 2024 ClassMate. All rights reserved.</p>
-    <p className="mt-4 mb-2">ClassMate is a platform for students to share and acquire skills. Whether you're looking for a scribe, want to offer your skills, or simply connect with like-minded individuals, ClassMate has you covered. Join our community today!</p>
-    <ul className="mt-4">
-      <li><a href="#">About Us</a></li>
-      <li><a href="#">Contact Us</a></li>
-      <li><a href="#">Terms of Service</a></li>
-      <li><a href="#">Privacy Policy</a></li>
-    </ul>
-  </div>
-</footer>
+  
+<footer className="relative bg-blueGray-200 pt-8 pb-6">
+      <div className="container mx-auto px-4">
+        <div className="flex flex-wrap text-left lg:text-left">
+          <div className="w-full lg:w-6/12 px-4">
+            <h4 className="text-3xl fonat-semibold text-blueGray-700">Let's keep in touch!</h4>
+            <h5 className="text-lg mt-0 mb-2 text-blueGray-600">
+              Find us on any of these platform.. Contact admin for any queries.
+            </h5>
+            <div className="mt-6 lg:mb-0 mb-6">
+              <button  className="bg-white text-lightBlue-400 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2" type="button">
+                <FaTwitter />
+              </button>
+              <button className="bg-white text-lightBlue-600 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2" type="button">
+                <FaFacebookSquare />
+              </button>
+              <button onClick={handleWhatsappClick} className="bg-white text-pink-400 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2" type="button">
+                <FaWhatsapp />
+              </button>
+              <button className="bg-white text-blueGray-800 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2" type="button">
+                <FaGithub />
+              </button>
+            </div>
+          </div>
+          <div className="w-full lg:w-6/12 px-4">
+            <div className="flex flex-wrap items-top mb-6">
+              <div className="w-full lg:w-4/12 px-4 ml-auto">
+                <span className="block uppercase text-blueGray-500 text-sm font-semibold mb-2">Useful Links</span>
+                <ul className="list-unstyled">
+                  <li>
+                    <a className="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm" href="https://www.creative-tim.com/presentation?ref=njs-profile">About Us</a>
+                  </li>
+                  <li>
+                    <a className="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm" href="https://blog.creative-tim.com?ref=njs-profile">Blog</a>
+                  </li>
+                  <li>
+                    <a className="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm" href="https://www.github.com/creativetimofficial?ref=njs-profile">Github</a>
+                  </li>
+                  <li>
+                    <a className="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm" href="https://www.creative-tim.com/bootstrap-themes/free?ref=njs-profile">Free Products</a>
+                  </li>
+                </ul>
+              </div>
+              <div className="w-full lg:w-4/12 px-4">
+                <span className="block uppercase text-blueGray-500 text-sm font-semibold mb-2">Other Resources</span>
+                <ul className="list-unstyled">
+                  <li>
+                    <a className="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm" href="https://github.com/creativetimofficial/notus-js/blob/main/LICENSE.md?ref=njs-profile">MIT License</a>
+                  </li>
+                  <li>
+                    <a className="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm" href="https://creative-tim.com/terms?ref=njs-profile">Terms & Conditions</a>
+                  </li>
+                  <li>
+                    <a className="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm" href="https://creative-tim.com/privacy?ref=njs-profile">Privacy Policy</a>
+                  </li>
+                  <li>
+                    <a className="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm" href="https://creative-tim.com/contact-us?ref=njs-profile">Contact Us</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr className="my-6 border-blueGray-300" />
+        <div className="flex flex-wrap items-center md:justify-between justify-center">
+          <div className="w-full md:w-4/12 px-4 mx-auto text-center">
+            <div className="text-sm text-blueGray-500 font-semibold py-1">
+              Copyright © <span id="get-current-year">2024</span><a href="https://www.creative-tim.com/product/notus-js" className="text-blueGray-500 hover:text-gray-800" target="_blank"/> 
+              <a href="https://www.creative-tim.com?ref=njs-profile" className="text-blueGray-500 hover:text-blueGray-800">ClassMate: Skill Connect Platform</a>.
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
 
     </div>
   );

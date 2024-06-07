@@ -16,33 +16,28 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import SearchIcon from '@mui/icons-material/Search';
-import { useNavigate } from 'react-router-dom';
+
 import { useHistory } from 'react-router-dom';
+
+
+import { useNavigate, useLocation } from 'react-router-dom';
+
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
+  
   borderRadius: theme.shape.borderRadius,
   backgroundColor: alpha(theme.palette.common.white, 0.15),
   '&:hover': {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
   },
-  marginLeft: 0,
-  marginRight: 20,
+  display: 'flex',
+  alignItems: 'center',
   width: '100%',
-  [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(1),
-    width: 'auto',
-  },
-  [theme.breakpoints.down('xs')]: {
-    width: '50%', // Adjust the width for mobile screens
-  },
 }));
 
 const SearchIconWrapper = styled('div')(({ theme }) => ({
   padding: theme.spacing(0, 2),
-  height: '100%',
-  position: 'absolute',
-  pointerEvents: 'none',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -50,10 +45,9 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: 'inherit',
-  width: '100%',
+  width: '70%',
   '& .MuiInputBase-input': {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create('width'),
     [theme.breakpoints.up('sm')]: {
@@ -63,10 +57,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
       },
     },
     [theme.breakpoints.down('sm')]: {
-      width: '8ch', // Adjust the width for mobile screens
-      
+      width: '8ch',
     },
-    
   },
 }));
 
@@ -77,8 +69,12 @@ function ResponsiveAppBar({email}) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+ // Use useHistory hook
   const navigate = useNavigate();  // Use useHistory hook
+  const location = useLocation()
 
+  
 
   const handleCloseUserMenu = () => {
     
@@ -116,7 +112,30 @@ const handleProfile= () => {
     setAnchorElNav(null);
   };
 
- 
+ const handleHome =() =>{
+  if (location.pathname.startsWith('/Main/SkillList')) {
+    const parts = location.pathname.split('/');
+    if (parts.length === 4) {
+      // /Main/SkillList:title
+      navigate(-1);
+    } else {
+      // /Main/SkillList/...
+      navigate(-3);
+    }
+  } 
+  else if (location.pathname.startsWith('/Main/profile2')) {
+    navigate(-1);
+  }
+ }
+
+
+ const handleSearch = () => {
+  // Implement your search logic here
+  navigate(`/Main/SkillList/${searchQuery}`);
+  console.log('Searching for:', searchQuery);
+};
+
+
 
   return (
     <AppBar position="static" sx={{ backgroundColor: '#2d3748' }}>
@@ -127,7 +146,7 @@ const handleProfile= () => {
             variant="h6"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
+            onClick={handleHome}
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -136,6 +155,7 @@ const handleProfile= () => {
               letterSpacing: '.3rem',
               color: 'inherit',
               textDecoration: 'none',
+              cursor:'pointer',
             }}
           >
             CLASSMATE
@@ -203,17 +223,21 @@ const handleProfile= () => {
               
             ))}
           </Box>
-           < Box sx={{flexGrow: 0}}>
-           <Search >
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </Search>
-           </Box>
+          <Box sx={{ flexGrow: 0 }}>
+  <Search>
+  <SearchIconWrapper>
+    <IconButton onClick={handleSearch} aria-label="search">
+      <SearchIcon />
+    </IconButton>
+    </SearchIconWrapper>
+    <StyledInputBase
+      placeholder="Search…"
+      inputProps={{ 'aria-label': 'search' }}
+      onChange={(e) => setSearchQuery(e.target.value)}
+    />
+    
+  </Search>
+</Box>
           <Box sx={{ flexGrow: 0 }}>
           
             <Tooltip title="Open settings">
@@ -237,12 +261,19 @@ const handleProfile= () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-               <MenuItem key={setting} onClick={setting === 'Logout' ? handleLogout : setting === 'Profile' ? handleProfile : handleCloseUserMenu}>
-  <Typography textAlign="center">{setting}</Typography>
-</MenuItem>
-              
-              ))}
+             {settings.map((setting) => (
+  (location.pathname.startsWith('/Main/profile2') || location.pathname.startsWith('/Main/SkillList')) ? (
+    setting === 'Logout' && (
+      <MenuItem key={setting} onClick={handleLogout}>
+        <Typography textAlign="center">{setting}</Typography>
+      </MenuItem>
+    )
+  ) : (
+    <MenuItem key={setting} onClick={setting === 'Logout' ? handleLogout : handleProfile}>
+      <Typography textAlign="center">{setting}</Typography>
+    </MenuItem>
+  )
+))}
             </Menu>
           </Box>
           

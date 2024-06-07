@@ -18,7 +18,7 @@ function App() {
   const [branch, setBranch] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [selectedSkills, setSelectedSkills] = useState([]);
+  
   const location = useLocation();
   const userData = location.state;
 
@@ -27,10 +27,36 @@ function App() {
     setEmail(userData.email);
   }, [userData]);
   const navigate = useNavigate();
+  const[newwSkill,setNewwSkill]= useState('');
+  const [selectedSkills, setSelectedSkills] = useState([]);
+
+  const[skillOptions,setSkillOptions]= useState([
+    { title: 'Dance' },
+    { title: 'Music' },
+    { title: 'Web Development' },
+    { title: 'Artificial Intelligance' },
+    { title: 'Flutter' },
+    { title: 'Academics' },
+    { title: 'Act as Scribe' }
+  ]);
+
 
   const handleSkillChange = (event, selectedOptions) => {
+    
     setSelectedSkills(selectedOptions.map((option) => option.title));
   };
+
+  const handleSkillChange2 = (event) => {
+    event.preventDefault();
+    setNewwSkill('');
+    if (typeof newwSkill === 'string' && newwSkill.trim() !== '' && !skillOptions.some(option => option.title.toLowerCase() === newwSkill.toLowerCase())) {
+      setSkillOptions([...skillOptions, { title: newwSkill }]);
+    }
+  };
+  
+
+
+  
   
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -97,9 +123,12 @@ function App() {
           
         </div>
       </div>
-      <div className="w-1/2 h-72 bg-white-200 flex-1p-8 mb-5" style={{marginLeft:"39rem"}}>
-
-
+      <div className="w-1/2 h-72 bg-white-200 flex-1p-8" style={{marginLeft:"40rem"}}>
+      <div><form><input  className='rounded h-10 border border-gray-400 px-3 mb-5' style={{marginBottom:'2.5rem'}}
+     type="text"
+     onChange={(e) => setNewwSkill(e.target.value)} value={newwSkill}
+     placeholder='Enter Skill Of Your Choice' /><button className='ml-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' onClick={handleSkillChange2} >add</button></form>
+     </div>
       <Autocomplete
   multiple
   id="checkboxes-tags-demo"
@@ -124,27 +153,21 @@ function App() {
     <TextField {...params} label="Add Skill" placeholder="Favorites" />
   )}
 />
-        <div className="mt-4">
+
+<div className="mt-4">
  
 
-  <button  onClick={handleSubmit} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 mt-3 px-4 rounded">
-    Submit
-  </button>
+ <button  onClick={handleSubmit} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 mt-3 px-4 rounded">
+   Add Skills
+ </button>
+ 
 
-          </div>
-      </div>
+         </div>
+         </div>
     </div>
   );
 }
 
-  const skillOptions = [
-    { title: 'Dance' },
-    { title: 'Music' },
-    { title: 'Web Development' },
-    { title: 'Artificial Intelligance' },
-    { title: 'Flutter' },
-    { title: 'Academics' },
-    { title: 'Act as Scribe' }
-  ];
+  
 
 export default App;

@@ -1,11 +1,11 @@
 import React,{ useState , useEffect } from 'react'
-import whatsapp from '../assets/whatsapp.png';
+import whatsapp from '../assets/whatsapp1.png';
 import contact from '../assets/contact2.png';
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-
+import ResponsiveAppBar from './ResponsiveAppBar';
 
 const textStyle = {
   fontSize: '1.6rem',
@@ -14,15 +14,31 @@ const textStyle = {
   marginTop:20,
 };
 
-const SkillList = () => {
+const SkillList = ({setFromSkillList}) => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [selectedStarsMap, setSelectedStarsMap] = useState({});  
+    const [selectedStarsMap, setSelectedStarsMap] = useState({}); 
+    const [userRating, setUserRating] = useState([0, 0, 0, 0, 0]); // Array to store count of each rating value
+    const [userRatingCount, setUserRatingCount] = useState({}); // Object to store the count of each rating value
+  
+    
+
 
     let { title } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
     const [ratingPopups, setRatingPopups] = useState({});
+
+  
+    const handleContactClick = (userEmail) => {
+        // Navigate to the desired page when a card is clicked
+        console.log("Navigating to profile page")
+        setFromSkillList(true);
+  navigate(`/Main/profile2?email=${userEmail}`); 
+      };
+
+
+
 
     const toggleRatingPopup = (userId) => {
         setSelectedUserId(userId); // Assuming setSelectedUserId is a state setter function
@@ -57,7 +73,7 @@ const SkillList = () => {
   }
 
   if (users.length === 0) {
-    return <p>No users found with the skill {title}</p>;
+    return<div className='bg-red-200 w-3/4 font-bold text-xl  mx-auto mr-auto rounded h-36 mt-16 align-items-center justify-center text-center pt-12'><p>No users found with the skill {title}</p></div> ;
   }
 
 
@@ -84,31 +100,69 @@ const SkillList = () => {
 
   const handleSubmit = async (userId) => {
     try {
-        const selectedStars = getSelectedStars(userId);
-        if (!selectedStars) {
-            console.error('No stars selected for user');
-            return;
-          }
-      
-  
+      const selectedStars = getSelectedStars(userId);
+      console.log(selectedStars);
+      if (!selectedStars) {
+        console.error('No stars selected for user');
+        return;
+      }
+
       // Send a request to the backend to update the user's rating
-      const response = await axios.put(`http://localhost:3001/updateRating/${selectedUserId}`, { rating: selectedStars });
+      const response = await axios.put(`http://localhost:3001/updateRating/${userId}`, {
+        rating: selectedStars,
+      });
       console.log(response.data);
-      
+
       // Handle success, e.g., show a success message
     } catch (error) {
       console.error(error);
       // Handle error, e.g., show an error message
     }
   };
+
   
   return (
+    
     <div className='mainbox w-screen h-screen'>
-        <div className='skillname w-3/4 h-20 flex justify-center items-center ml-auto mr-auto 'style={{backgroundColor:'#181B30', marginBottom:'3rem'}}>
-            <p className='text-white text-lg font-bold  '>{title}</p>
+        <ResponsiveAppBar/>
+        <div className='skillname w-3/4 h-20 flex justify-center items-center ml-auto mr-auto mt-5  'style={{backgroundColor:'#181B30', marginBottom:'3rem',marginTop:'3rem'}}>
+            <p className='text-white text-lg font-bold  ' style={{fontSize:'22px', fontFamily:'monospace', textTransform:'uppercase',letterSpacing: '1px'}}>{title}</p>
         </div>
+        {title === 'Dance' || title === 'Music' ? (
+                <div  className=' w-3/4 h-20 border border-black ml-auto mr-auto mt-5 rounded-lg ' style={{marginTop:'2rem', backgroundColor:'black'}} >
+
+<div className='name w-1/2 h-20 float-left'>
+ 
+  <p className='text-white p-5 pl-5' style={{wordSpacing:6, textStyle, fontSize:'20px',fontWeight:'inherit'}}>Join  GCEK {title} Club</p> 
+</div>
+<div className='connect float-left'style={{
+  height:80,
+  width:400
+}}>
+  <p className='pt-5 font-bold'style={{
+   fontSize: '1.3rem',
+   paddingLeft:310, 
+   fontFamily:'monospace'
+  }}></p>
+</div>
+<div className='icon float-left ml-5 'style={{
+  width:80,
+  height:70,
+  marginLeft:'4rem',
+  backgroundImage:`url(${whatsapp})`,
+  backgroundRepeat: 'no-repeat',
+  backgroundSize: 'cover',
+  backgroundPosition:'center',
+  cursor:'pointer'
+}}  > 
+</div>
+
+</div>
+) : null}
+        
         {users.map(user => (
             <div  key={user._id}>
+       
         <div key={user._id} className=' w-3/4 h-20 border border-black ml-auto mr-auto mt-5 rounded-lg ' style={{marginTop:'2rem'}} >
 
           <div className='name w-1/2 h-20 float-left'>
@@ -120,8 +174,9 @@ const SkillList = () => {
              backgroundImage:`url(${contact})`,
              backgroundRepeat: 'no-repeat',
              backgroundSize: 'cover',
-             backgroundPosition:'center' 
-            }}>
+             backgroundPosition:'center',
+             cursor: 'pointer' ,
+            }} onClick={() => handleContactClick(user.email)}> 
             </div> 
             <p style={textStyle}>{user.name}</p> 
           </div>
@@ -141,8 +196,9 @@ const SkillList = () => {
             backgroundImage:`url(${whatsapp})`,
             backgroundRepeat: 'no-repeat',
             backgroundSize: 'cover',
-            backgroundPosition:'center'
-          }}>   
+            backgroundPosition:'center',
+            cursor:'pointer'
+          }} onClick={() => window.open(`https://api.whatsapp.com/send?phone=${user.contact}`, '_blank')} > 
           </div>
           <div className='rate float-left bg-yellow-500 font-bold rounded float-left border border-black mr-2 'style={{
             fontSize: '1.1rem',

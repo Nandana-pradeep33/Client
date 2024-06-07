@@ -3,8 +3,10 @@ import React, { useState } from 'react'
 import  loginImg from '../assets/students.png'
 import { Link, useNavigate } from 'react-router-dom';
 
+
 import axios from 'axios';
 
+const bcrypt = require('bcryptjs');
 const SignUp = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -50,7 +52,9 @@ const SignUp = () => {
                 if (emailExists) {
                     setEmailError('Email address is already registered');
                 } else {
-                    const result = await axios.post('http://localhost:3001/register', { name, email, password, contact });
+                    const hashedPassword = await bcrypt.hash(password, 10); // 10 is the saltRounds
+
+                    const result = await axios.post('http://localhost:3001/register', { name, email, password: hashedPassword, contact });
                     console.log(result);
                     // Navigate to the next page on successful registration
                     const userData = { name, email, contact };
