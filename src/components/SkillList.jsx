@@ -20,13 +20,14 @@ const SkillList = ({setFromSkillList}) => {
     const [selectedStarsMap, setSelectedStarsMap] = useState({}); 
     const [userRating, setUserRating] = useState([0, 0, 0, 0, 0]); // Array to store count of each rating value
     const [userRatingCount, setUserRatingCount] = useState({}); // Object to store the count of each rating value
-  
+   
     
-
-
+    const location = useLocation();                              
+  const searchParams = new URLSearchParams(location.search);
+    const signedInUserEmail = searchParams.get('email'); 
     let { title } = useParams();
     const navigate = useNavigate();
-    const location = useLocation();
+  
     const [ratingPopups, setRatingPopups] = useState({});
 
   
@@ -200,17 +201,31 @@ const SkillList = ({setFromSkillList}) => {
             cursor:'pointer'
           }} onClick={() => window.open(`https://api.whatsapp.com/send?phone=${user.contact}`, '_blank')} > 
           </div>
-          <div className='rate float-left bg-yellow-500 font-bold rounded float-left border border-black mr-2 'style={{
-            fontSize: '1.1rem',
-            marginTop:15,
-            height:50,
-            width:70  //92
-          }}onClick={() => toggleRatingPopup(user._id)}>
-            <p style={{
-              marginLeft:17,
-              marginTop:10
-            }}>Rate</p>
-          </div>
+          <div
+      className={`rate float-left bg-yellow-500 font-bold rounded float-left border border-black mr-2 ${
+        signedInUserEmail === user.email ? 'opacity-50 cursor-not-allowed' : ''
+      }`}
+      style={{
+        fontSize: '1.1rem',
+        marginTop: 15,
+        height: 50,
+        width: 70,
+      }}
+      onClick={() => {
+        if (signedInUserEmail !== user.email) {
+          toggleRatingPopup(user._id);
+        }
+      }}
+    >
+      <p
+        style={{
+          marginLeft: 17,
+          marginTop: 10,
+        }}
+      >
+        Rate
+      </p>
+    </div>
         </div>
         
         

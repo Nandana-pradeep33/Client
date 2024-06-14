@@ -110,7 +110,7 @@ const Landingpage = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const email = searchParams.get('email');
- 
+  
   const handleScribe= () => {                                      //
     console.log("navigating to scribe page")
     navigate(`/Main/Scribe?email=${email}`);
@@ -121,7 +121,7 @@ const Landingpage = () => {
 
   const handleCardClick = (title) => {
     // Navigate to the desired page when a card is clicked
-    navigate(`/Main/SkillList/${encodeURIComponent(title)}`);
+    navigate(`/Main/SkillList/${encodeURIComponent(title)}?email=${email}`);
   };
 
   const handleWhatsappClick = () => {
