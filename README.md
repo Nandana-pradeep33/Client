@@ -18,26 +18,28 @@ This Peer-to-Peer Skill Connect Platform for college students helps them connect
 
 ## Landing Page
 
-![Alt text](src/assets/landing.png)
+<div style="display: flex; gap: 0;">
+    <img src="src/assets/landing.png" alt="Landing Image 1" />
+    <img src="src/assets/landing21.png" alt="Landing Image 2" />
+   <img src="src/assets/faq.png" alt="Landing Image 2" />
+</div>
 
-![Alt text](src/assets/landing2.png)
-
-![Alt text](src/assets/faq.png)
 
 
 ## Skill Search
 ![Alt text](src/assets/search.png)
 
 
-## Scribe request
+## Scribe Request
 
+![Alt text](src/assets/scribea.png)
 
-![Alt text](src/assets/scribeg.png)
 
 
 ## Scribe Accept
 
-![Alt text](src/assets/scribea.png)
+![Alt text](src/assets/scribeg.png)
+
 
 
 
